@@ -1,0 +1,337 @@
+#+TITLE: Marcels Emacs init.el
+* Put this at the Beginning of your ~/.emacs.d/init.el
+#+BEGIN_SRC emacs-lisp :tangle no
+  (require 'org)
+  (org-babel-load-file
+   (expand-file-name "lit_init.org"
+                     user-emacs-directory))
+#+END_SRC
+* Garbage Collector
+Make the GC run less on startup
+#+BEGIN_SRC emacs-lisp 
+  ;; -*- lexical-binding: t; -*-
+  (setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
+        gc-cons-percentage 0.6)
+#+END_SRC
+* Setup Package Management
+Setup package managent.
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/"))
+  (package-initialize t)
+  (setq custom-file "~/.emacs.d/custom.el")
+  (ignore-errors (make-empty-file "test.txt"))
+  (load "~/.emacs.d/custom.el")
+  (package-refresh-contents t)
+#+END_SRC
+Make sure use-package is installed
+#+BEGIN_SRC emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+  (unless (package-installed-p 'general)
+    (package-install 'general))
+  (require 'general)
+#+END_SRC
+* Dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :init
+    (setq dashboard-set-footer nil)
+    (setq dashboard-center-content t)
+    :config
+    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+    (dashboard-setup-startup-hook))
+#+END_SRC
+* evil
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode))
+  (use-package evil
+    :after undo-tree
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-undo-system 'undo-tree)
+    :config
+    (evil-select-search-module 'evil-search-module 'evil-search)
+    (evil-mode 1))
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+  (use-package evil-org
+    :after org
+    :hook (org-mode . evil-org-mode)
+    :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
+#+END_SRC
+* rainbow delimiters
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
+* flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+
+#+END_SRC
+* format-all-buffer
+#+BEGIN_SRC emacs-lisp
+  (use-package format-all)
+#+END_SRC
+
+* org-mode
+Setup orgmode, identatation, bulltes
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :defer t
+    :init
+    (setq org-directory "~/Nextcloud/org/")
+    (setq org-default-notes-file (concat org-directory "/notes.org"))
+    :config
+    (setq org-startup-indented t))
+  (use-package org-indent
+    :ensure nil
+    :diminish
+    :custom
+    (org-indent-indentation-per-level 2))
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode)
+    :after org
+    :config
+    (org-bullets-mode 1))
+#+END_SRC
+* Latex
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :defer t)
+#+END_SRC
+* Theming
+Setup Doom solarized theme and doom modeline
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-themes
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-solarized-dark t))
+  (use-package doom-modeline
+    :after doom-themes
+    :init
+    (doom-modeline-mode 1))
+  (use-package recentf
+    :config
+    (setq recentf-max-menu-items 15
+          recentf-max-saved-items 100
+          )
+    :hook (after-init . recentf-mode))
+#+END_SRC
+* which-key
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :config
+    (which-key-mode))
+#+END_SRC
+* treemacs
+#+BEGIN_SRC emacs-lisp
+  (use-package treemacs)
+  (use-package treemacs-evil
+    :after evil treemacs)
+#+END_SRC
+* ivy
+Setup ivy and counsel
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :config
+    (ivy-mode))
+  (use-package ivy-rich
+    :after ivy
+    :init
+    (ivy-rich-mode 1))
+  (use-package counsel
+    :after ivy
+    ;;:bind ("C-x C-r" . counsel-recentf)
+    :config
+    (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
+    (counsel-mode))
+#+END_SRC
+* lsp
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :defer t
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-rust-server 'rust-analyzer)
+    :hook ((c-mode . lsp)
+           (rust-mode . lsp)
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+  (use-package lsp-ui
+    :after lsp-mode
+    :commands lsp-ui-mode)
+  (use-package lsp-ivy
+    :after lsp-mode
+    :commands lsp-ivy-workspace-symbol)
+#+END_SRC
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :init
+    (yas-global-mode 1))
+  (use-package yasnippet-snippets
+    :after yasnippet)
+#+END_SRC
+* slime
+#+BEGIN_SRC emacs-lisp
+  (use-package slime
+    :init
+    (setq inferior-lisp-program "sbcl"))
+#+END_SRC
+* company mode
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :hook (after-init-hook . global-company-mode))
+#+END_SRC
+* Rust
+install and configure rust-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode)
+#+END_SRC
+* Magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :commands
+    magit-status)
+#+END_SRC
+* winum
+use M-NUM to change windows
+#+BEGIN_SRC emacs-lisp
+  (use-package winum
+    :config
+    (winum-mode))
+#+END_SRC
+* Global Editor defaults
+editor config (tabs, linenumbers etc.)
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :height 140)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (global-display-line-numbers-mode)
+  (setq-default auto-fill-function 'do-auto-fill)
+  (setq-default fill-column 80)
+  (setq tab-width 4)
+  (setq vc-follow-symlinks t)
+  (defun open-config-file ()
+    "Open the init file."
+    (interactive)
+    (find-file "~/.emacs.d/lit_init.org"))
+  (general-define-key
+   :keymaps 'normal
+   :prefix "SPC"
+   ;;file
+   "f" '(:ignore t :wk "file")
+   "ff" '(counsel-find-file :wk "find")
+   "fr" '(counsel-recentf :wk "recent files")
+   "fc" '(open-config-file :wk "open config")
+   "fd" '(dired :wk "dired")
+   "fi" '(dired :wk "dired")
+   ;;buffers
+   "b" '(:ignore t :wk "buffer")
+   "br" 'counsel-buffer-or-recentf
+   "bd" '(kill-this-buffer :wk "kill-this-buffer")
+   "bb" '(counsel-ibuffer :wk "list-buffer")
+   "bm" '(delete-other-windows :wk "maximize buffer")
+   "bp" '(previous-buffer :wk "previous buffer")
+   "bn" '(next-buffer :wk "next buffer")
+   "bi" '(dired :wk "dired")
+   ;;window
+   "w" '(:ignore t :wk "window")
+   "wd" '(delete-window :wk "close window")
+   "wq" '(kill-buffer-and-window :wk "kill buffer and window")
+   "ws" '(split-window-below :wk "split horizontal")
+   "wv" '(split-window-right :wk "split vertical")
+   "wm" '(delete-other-windows :wk "delete other windows")
+   ;; open
+   "o" '(:nothing t :wk "open")
+   "oa" '(org-agenda :wk "org agenda")
+   "os" '(eshell :wk "eshell")
+   "ot" '(treemacs :wk "treemacs"))
+
+  (general-define-key
+   :prefix "C-x"
+   "C-r" '(counsel-recentf :wk "recent files"))
+
+  (general-define-key
+   :keymaps 'normal
+   :prefix "SPC"
+   "gg" 'magit-status)
+
+  (general-define-key
+   :keymaps 'org-mode-map
+   :states 'normal
+   :prefix "SPC"
+   "m"  '(:ignore t :wk "org")
+   "me" 'org-export-dispatch)
+
+  (general-define-key
+   :keymaps 'ivy-minibuffer-map
+   "C-j" 'ivy-next-line
+   "C-k" 'ivy-previous-line
+   )
+
+  (general-define-key
+   "M-1" 'winum-select-window-1
+   "M-2" 'winum-select-window-2
+   "M-3" 'winum-select-window-3
+   "M-4" 'winum-select-window-4
+   "M-5" 'winum-select-window-5
+   "M-6" 'winum-select-window-6
+   "M-7" 'winum-select-window-7
+   "M-8" 'winum-select-window-8
+   "M-9" 'winum-select-window-9
+   "M-0" 'winum-select-window-0-or-10)
+#+END_SRC
+set enoding to utf-8 everywhere
+#+BEGIN_SRC emacs-lisp
+  (setq-default tab-width 4)
+  (defvaralias 'c-basic-offset 'tab-width) ;; always allow 'y' instead of 'yes'.
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (set-charset-priority 'unicode)
+  (setq locale-coding-system 'utf-8
+        coding-system-for-read 'utf-8
+        coding-system-for-write 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+#+END_SRC
+Auto pair parents
+#+BEGIN_SRC emacs-lisp
+  (electric-pair-mode 1)
+  (setq electric-pair-preserve-balance nil)
+#+END_SRC
+create backupfiles on hidden central folder
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist '((".*" . ".backupfiles")))
+#+END_SRC
+
+* Reset Garbage Collection
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold 16777216 ; 16mb
+                    gc-cons-percentage 0.1)))
+#+END_SRC
