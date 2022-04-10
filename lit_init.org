@@ -20,8 +20,8 @@ Setup package managent.
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/"))
   (package-initialize t)
+  (ignore-errors (make-empty-file "~/.emacs.d/custom.el"))
   (setq custom-file "~/.emacs.d/custom.el")
-  (ignore-errors (make-empty-file "test.txt"))
   (load "~/.emacs.d/custom.el")
   (package-refresh-contents t)
 #+END_SRC
