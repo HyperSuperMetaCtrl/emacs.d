@@ -208,6 +208,11 @@ install and configure rust-mode
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode)
 #+END_SRC
+* Python
+#+BEGIN_SRC emacs-lisp
+  
+#+END_SRC
+
 * Magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -325,7 +330,8 @@ Auto pair parents
 #+END_SRC
 create backupfiles on hidden central folder
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '((".*" . ".backupfiles")))
+  (setq backup-directory-alist '((".*" . "/tmp/backupfiles")))
+  (setq undo-tree-history-directory-alist '(("." . "/tmp/undotree")))
 #+END_SRC
 
 * Reset Garbage Collection
