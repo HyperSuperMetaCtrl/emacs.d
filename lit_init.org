@@ -112,6 +112,13 @@ Setup orgmode, identatation, bulltes
     :config
     (org-bullets-mode 1))
 #+END_SRC
+For exporting .org files to reveal.js presentations
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-reveal
+    :after org
+    :init
+    (setq org-reveal-root "/home/marcel/git/reveal.js"))
+#+END_SRC
 * Latex
 #+BEGIN_SRC emacs-lisp
   (use-package auctex
