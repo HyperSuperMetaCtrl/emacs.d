@@ -184,6 +184,10 @@ Setup ivy and counsel
     :after lsp-mode
     :commands lsp-ivy-workspace-symbol)
 #+END_SRC
+* projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile)
+#+END_SRC
 * yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -212,7 +216,6 @@ install and configure rust-mode
 #+BEGIN_SRC emacs-lisp
   
 #+END_SRC
-
 * Magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
@@ -293,8 +296,12 @@ editor config (tabs, linenumbers etc.)
   (general-define-key
    :keymaps 'ivy-minibuffer-map
    "C-j" 'ivy-next-line
-   "C-k" 'ivy-previous-line
-   )
+   "C-k" 'ivy-previous-line)
+
+  (general-define-key
+   :keymaps 'normal
+   :prefix "SPC"
+   "p" 'projectile-command-map)
 
   (general-define-key
    "M-1" 'winum-select-window-1
