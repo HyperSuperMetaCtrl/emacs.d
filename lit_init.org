@@ -118,6 +118,7 @@ For exporting .org files to reveal.js presentations
     :after org
     :init
     (setq org-reveal-root "/home/marcel/git/reveal.js"))
+  (use-package htmlize)
 #+END_SRC
 * Latex
 #+BEGIN_SRC emacs-lisp
