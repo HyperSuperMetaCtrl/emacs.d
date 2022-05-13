@@ -266,7 +266,7 @@ editor config (tabs, linenumbers etc.)
    ;;buffers
    "b" '(:ignore t :wk "buffer")
    "br" 'counsel-buffer-or-recentf
-   "bd" '(kill-this-buffer :wk "kill-this-buffer")
+   "bd" '(kill-current-buffer :wk "kill-this-buffer")
    "bb" '(counsel-ibuffer :wk "list-buffer")
    "bm" '(delete-other-windows :wk "maximize buffer")
    "bp" '(previous-buffer :wk "previous buffer")
