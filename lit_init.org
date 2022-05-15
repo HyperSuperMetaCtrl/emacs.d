@@ -222,7 +222,11 @@ install and configure rust-mode
 #+END_SRC
 * Python
 #+BEGIN_SRC emacs-lisp
-  
+  (use-package elpy
+    :ensure t
+    :init
+    (elpy-enable))
+  (use-package ein)
 #+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
