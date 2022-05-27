@@ -348,6 +348,11 @@ create backupfiles on hidden central folder
   (setq backup-directory-alist '((".*" . "/tmp/backupfiles")))
   (setq undo-tree-history-directory-alist '(("." . "/tmp/undotree")))
 #+END_SRC
+This automatically reverts the buffer when its visited file changes on disk globally.
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode 1)
+  (setq auto-revert-check-vc-info t)
+#+END_SRC
 
 * Reset Garbage Collection
 #+BEGIN_SRC emacs-lisp
