@@ -119,7 +119,11 @@ For exporting .org files to reveal.js presentations
     :init
     (setq org-reveal-root "/home/marcel/git/reveal.js"))
   (use-package htmlize)
+  (use-package presentaion)
+  (use-package ob-rust)
+  (use-package org-babel)
 #+END_SRC
+
 * Latex
 #+BEGIN_SRC emacs-lisp
   (use-package auctex
@@ -240,7 +244,7 @@ use M-NUM to change windows
 * Global Editor defaults
 editor config (tabs, linenumbers etc.)
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :height 130)
+  (set-face-attribute 'default nil :height 130 :font "Fira Code")
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -271,7 +275,7 @@ editor config (tabs, linenumbers etc.)
    "bm" '(delete-other-windows :wk "maximize buffer")
    "bp" '(previous-buffer :wk "previous buffer")
    "bn" '(next-buffer :wk "next buffer")
-   "bi" '(dired :wk "dired")
+   "bi" '(ibuffer :wk "ibuffer")
    ;;window
    "w" '(:ignore t :wk "window")
    "wd" '(delete-window :wk "close window")
