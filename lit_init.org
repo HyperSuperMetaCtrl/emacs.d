@@ -119,9 +119,7 @@ For exporting .org files to reveal.js presentations
     :init
     (setq org-reveal-root "/home/marcel/git/reveal.js"))
   (use-package htmlize)
-  (use-package presentaion)
   (use-package ob-rust)
-  (use-package org-babel)
 #+END_SRC
 
 * Latex
