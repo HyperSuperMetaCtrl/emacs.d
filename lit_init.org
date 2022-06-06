@@ -100,7 +100,8 @@ Setup orgmode, identatation, bulltes
     (setq org-directory "~/Nextcloud/org/")
     (setq org-default-notes-file (concat org-directory "/notes.org"))
     :config
-    (setq org-startup-indented t))
+    (setq org-startup-indented t)
+    (setq org-confirm-babel-evaluate nil))
   (use-package org-indent
     :ensure nil
     :diminish
@@ -120,6 +121,13 @@ For exporting .org files to reveal.js presentations
     (setq org-reveal-root "/home/marcel/git/reveal.js"))
   (use-package htmlize)
   (use-package ob-rust)
+  (use-package org-tree-slide
+    :after org)
+  (general-define-key
+   :keymaps 'org-tree-slide-mode-map
+   :states 'normal
+   "<" 'org-tree-slide-move-previous-tree
+   ">" 'org-tree-slide-move-next-tree)
 #+END_SRC
 
 * Latex
